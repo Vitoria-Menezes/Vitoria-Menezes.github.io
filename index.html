@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="POST" id="id_formulario" name="formulario">
+      <fieldset>
+        <legend>Trabalhe conosco</legend>
+        <div>
+          <label for="id_nome"
+            >Nome:
+            <input type="text" name="nome" id="id_nome" />
+          </label>
+        </div>
+
+        <div>
+          <p>Vagas disponíveis</p>
+          <label for="id_frontend"
+            >Dev Front-end JR
+            <input
+              type="radio"
+              name="radio"
+              value="Dev Front-end JR"
+              id="id_frontend"
+            />
+          </label>
+
+          <label for="id_designer"
+            >Designer UI/UX
+            <input
+              type="radio"
+              name="radio"
+              value="Designer UI/UX"
+              id="id_designer"
+            />
+          </label>
+        </div>
+
+        <div>
+          <p>Habilidades</p>
+          <label for="id_html5"
+            >HTML5
+            <input type="checkbox" name="check" value="html5" id="id_html5" />
+          </label>
+
+          <label for="id_javascript"
+            >JavaScript
+            <input
+              type="checkbox"
+              name="check"
+              value="javascript"
+              id="id_javascript"
+            />
+          </label>
+
+          <label for="id_figma"
+            >Figma
+            <input type="checkbox" name="check" value="figma" id="id_figma" />
+          </label>
+        </div>
+
+        <div>
+          <label for="id_curso"
+            >Cursos:
+            <textarea
+              name="curso_textarea"
+              id="id_textarea"
+              cols="30"
+              rows="4"
+            ></textarea>
+          </label>
+        </div>
+
+        <button type="submit" value="enviar" id="id_enviar">Enviar</button>
+      </fieldset>
+    </form>
+
+    <script>
+      // Importação
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js&quot";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js&quot";
+      import {
+        getDatabase,
+        ref,
+        push,
+      } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js&quot";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD276TKdOdZlLl5W07CVg4RZ72rgBRGFB4",
+        authDomain: "teste-574a6.firebaseapp.com",
+        projectId: "teste-574a6",
+        storageBucket: "teste-574a6.appspot.com",
+        messagingSenderId: "972625644635",
+        appId: "1:972625644635:web:d4025104d58e9e0310837e",
+        measurementId: "G-Q6XE47B9Q9",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const database = getDatabase();
+
+      let form = document.getElementById("id_formulario");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let nome = form.nome.value;
+        let vaga = form.radio.value;
+        let curso = form.cursos_textarea.value;
+
+        let checks = document.querySelectorAll('[type="checkbox"]:checked');
+
+        let vetor = [];
+        checks.forEach((checkbox) => {
+          vetor.push(checkbox.value);
+        });
+
+        //1ª RESOLUÇÃO - Percorrer com o FOR
+        // for (let i = 0; i < form.habilidades.length; i++) {
+        //   if (form.habilidades[i].checked) {
+        //     vetor[i] = form.habilidades[i].value;
+        //     console.log(form.habilidades[i].value);
+        //   }
+        // }
+
+        //3ª RESOLUÇÃO - Captura via querySelectorAll
+        // let temp = document.querySelectorAll(`[name=habilidades]:checked`);
+        // temp.forEach((valor, index)=>{
+        // vetor[index] = valor.value;
+        // console.log(index, valor.value);
+        // })
+
+        alert(`
+            Nome: ${nome}
+            Vaga: ${vaga} 
+            Habilidades: ${vetor.join(", ")}
+            Cursos: ${curso}
+            `);
+
+        // Enviar os dados para o Firebase
+        const usersRef = ref(database, "users");
+        push(usersRef, {
+          nome: nome,
+          radio: vaga,
+          cursos: cursos,
+          habilidadess: vetor,
+        })
+          .then(() => {
+            alert("Dados enviados com sucesso!");
+            console.log("Dados enviados com sucesso!");
+            // Faça qualquer ação adicional aqui, como redirecionar o usuário ou exibir uma mensagem de sucesso.
+          })
+          .catch((error) => {
+            console.error("Erro ao enviar dados:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
