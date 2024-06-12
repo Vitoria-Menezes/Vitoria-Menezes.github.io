@@ -14,6 +14,11 @@
             <input type="text" name="nome" id="id_nome" />
           </label>
         </div>
+          <div>
+             <label for="id_data">Data de nascimento:
+              <input type="date" name="data" id="id_data">
+             </label>
+        </div>
 
         <div>
           <p>Vagas disponíveis</p>
@@ -108,6 +113,7 @@
         e.preventDefault();
 
         let nome = form.nome.value;
+        let data = form.data.value;
         let vaga = form.radio.value;
         let curso = form.cursos_textarea.value;
 
@@ -135,6 +141,7 @@
 
         alert(`
             Nome: ${nome}
+            Data: ${data}
             Vaga: ${vaga} 
             Habilidades: ${vetor.join(", ")}
             Cursos: ${curso}
@@ -144,6 +151,7 @@
         const usersRef = ref(database, "users");
         push(usersRef, {
           nome: nome,
+        data: data,
           radio: vaga,
           cursos: cursos,
           habilidadess: vetor,
